@@ -1,6 +1,8 @@
 SpikeSort: semi-automated spike clustering software for matlab
 Scott Grimes
-2011
+Max Planck Institute - 2011
+
+see presentation/presentation.pdf for more info
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
