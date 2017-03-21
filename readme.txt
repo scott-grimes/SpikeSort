@@ -1,5 +1,6 @@
-rat_sorting: semi-automated spike clustering software for matlab
+SpikeSort: semi-automated spike clustering software for matlab
 Scott Grimes
+2011
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
