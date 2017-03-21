@@ -1,0 +1,72 @@
+'Imports wavemarks into spike2 from txt file
+'Scott Grimes - Max Planck Cybernetics
+
+
+'Requires text data formatted thusly
+
+'interval number_of_points_in_each_spike
+'time_of_spike_start cluster_id spike_data
+'time_of_spike_start cluster_id spike_data
+'time_of_spike_start cluster_id spike_data
+'time_of_spike_start cluster_id spike_data
+
+
+
+
+
+var txt%;                                       'Text file handle
+var data%;                                      'Handle of created Spike2 data file
+var code%[4];                                   'Array for code values associated with wavemarks
+var num[112];                                   'Data values to associate with wavemarks
+var rFlag%;                                     'Count of items read from each line of text
+var mTime;                                      'Marker time
+var mCh%;                                       'wavemark memory channel 
+var mxTime;                                     'Time of last marker
+var fName$;                                     'Name of text file
+var lpoint;                                     'number of points in wavemark
+var myinterval;                                 'interval
+var myclus[4];
+
+txt% := FileOpen("",8,0);                       'Open text file
+if txt% < 0 then
+    Halt;
+endif;
+fName$ := FileName$();                          'Get file name
+View(txt%);
+repeat                                          'Read through file to get time of last marker
+    rFlag% := Read(mTime);
+    if rFlag% > 0 then
+        mxTime := mTime;
+    endif;
+    until rFlag% < 0;
+FileClose(0,-1);                                'Close down text file
+
+txt% := FileOpen(fName$,8,0);                   'Reopen text file (puts file pointer back to start of file)
+Read(myinterval,lpoint);                        'Read first line(contains headers)
+'var num[lpoint];
+data% := FileNew(7,0,myinterval*1000000,1,mxTime);'Create new empty data file
+                                                'Care should be taken to set a suitable microseconds per unit time value
+mCh% := MemChan(6,lpoint,myinterval,0);         'Set up wavemark memory channel
+repeat                                          'Step through each line
+    View(txt%);
+    rFlag% := Read(mTime,code%[0],num[]);       'Get time, code, and data value
+    'message(code%);
+    if rFlag% > 0 then                          'If values read then add to memory channel
+        View(data%).MemSetItem(mCh%,0,mTime,code%[],num[]);
+    endif;
+    until rFlag% < 0;                           'Until no data present
+
+
+View(data%);
+MemSave(mCh%,1);                                'Save to permanent channel
+ChanShow(1);                                    'Show data
+XRange(0,MaxTime());                            'Show whole time range
+Optimise(-1);                                   'Optimise display
+Window(00,0,100,100);                           'Make full screen
+ChanSelect(1,1);
+ChanCalibrate(-3,2,1,0.0,MaxTime(),"mV",0);
+FrontView(data%);                               'Bring window to front
+
+
+
+
